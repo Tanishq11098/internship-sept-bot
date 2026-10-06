@@ -1,1 +1,49 @@
+name: Daily Internship Scraper
 
+on:
+  schedule:
+    - cron: '30 2 * * *' # 8:00 AM IST
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+        
+      - name: Run Bot
+        env:
+          EMAIL: ${{ secrets.EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          GSHEET_ID: ${{ secrets.GSHEET_ID }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+          ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
+          RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
+          JOOBLE_KEY: ${{ secrets.JOOBLE_KEY }}
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          ATS_GREENHOUSE: ${{ vars.ATS_GREENHOUSE }}
+          ATS_LEVER: ${{ vars.ATS_LEVER }}
+          APIFY_ACTORS: ${{ vars.APIFY_ACTORS }}
+          APIFY_INPUT_JSON: ${{ vars.APIFY_INPUT_JSON }}
+          APIFY_MAX_ITEMS: ${{ vars.APIFY_MAX_ITEMS }}
+        run: python internship_bot.py
+        
+      - name: Upload Excel Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: internships
+          path: internships.xlsx
+          retention-days: 7
