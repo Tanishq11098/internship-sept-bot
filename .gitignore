@@ -1,0 +1,6 @@
+credentials.json
+.env
+*.xlsx
+__pycache__/
+*.pyc
+seen_history.json
