@@ -38,7 +38,7 @@ jobs:
           ATS_LEVER: ${{ vars.ATS_LEVER }}
           APIFY_ACTORS: ${{ vars.APIFY_ACTORS }}
           APIFY_INPUT_JSON: ${{ vars.APIFY_INPUT_JSON }}
-          APIFY_MAX_ITEMS: ${{ vars.APIFY_MAX_ITEMS }}
+          APIFY_MAX_ITEMS: ${{ vars.APIFY_MAX_ITEMS || '100' }}
         run: python internship_bot.py
         
       - name: Upload Excel Artifact
