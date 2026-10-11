@@ -23,8 +23,18 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger("InternshipBot")
 
 STRICT_LOCATION = os.getenv("STRICT_LOCATION", "false").lower() == "true"
-API_QUERIES_PER_RUN = int(os.getenv("API_QUERIES_PER_RUN", "4"))
-APIFY_MAX_ITEMS = int(os.getenv("APIFY_MAX_ITEMS", "100"))
+def get_int_env(name, default):
+    value = os.getenv(name)
+    if value is None or str(value).strip() == "":
+        return default
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        logger.warning(f"Invalid value for {name}: {value!r}. Using default {default}.")
+        return default
+
+API_QUERIES_PER_RUN = get_int_env("API_QUERIES_PER_RUN", 4)
+APIFY_MAX_ITEMS = get_int_env("APIFY_MAX_ITEMS", 100)
 EXCEL_WINDOW_DAYS = 50
 
 NOISE_TITLES = ["software", "developer", "devops", "data scientist", "sales", "marketing", "social media", "influencer", "seo", "copywriting", "brand", "recruiter", "hr", "telecaller", "bpo", "customer", "graphic", "content", "business development", "bde", "bd", "bdm", "logistics", "senior", "sr", "manager", "vp", "vice president", "director", "head of", "lead", "principal", "avp", "chief"]
