@@ -7,14 +7,14 @@ on:
 
 jobs:
   scrape:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
           
@@ -40,9 +40,19 @@ jobs:
           APIFY_INPUT_JSON: ${{ vars.APIFY_INPUT_JSON }}
           APIFY_MAX_ITEMS: ${{ vars.APIFY_MAX_ITEMS || '100' }}
         run: python internship_bot.py
-        
+
+      - name: Check Excel artifact presence
+        id: artifact_check
+        run: |
+          if [ -f internships.xlsx ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Upload Excel Artifact
-        uses: actions/upload-artifact@v4
+        if: steps.artifact_check.outputs.exists == 'true'
+        uses: actions/upload-artifact@v5
         with:
           name: internships
           path: internships.xlsx
